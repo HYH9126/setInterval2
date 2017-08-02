@@ -1,0 +1,198 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style type="text/css">
+	li{
+		list-style: none;
+		cursor: pointer;	
+	}
+	ul{
+		margin: 0;
+		padding: 0;
+	}
+	#box{
+		border: 5px solid #E7E7E7;
+		height:400px;
+		width: 800px;
+		overflow: hidden;
+		margin: 0 auto;
+	}
+	#box>ul{
+		width:100px;
+		height: 100%;
+		float: left;
+	}
+	#box>ul li{
+		line-height: 99px;
+		text-align: center;
+		background-color: #000;
+		border-bottom: 1px solid #E7E7E7;
+		color:white;
+	}
+	#box>ul .active{
+		background-color: red;
+		color:black;
+	}
+	#box div{
+		float: left;
+		width: 700px;
+		height: 100%;
+		position: relative;
+	}
+	#box img{
+		width: 100%;
+		height: 100%;
+	}
+	#box div ul{
+		position: absolute;
+		bottom: 0;
+		left: 0;
+	}
+	#box div li{
+		float: left;
+		border-right: 1px solid white;
+		background-color: black;
+		opacity: .7;
+		line-height: 30px;
+		margin-right: -1px;
+		color:white;
+		text-align: center;
+	}
+	#box div .active{
+		background-color: #EF3163;
+	}
+	.no{
+		display: none;
+	}
+	.yes{
+		display: block;
+	}
+</style>
+</head>
+
+<body>
+	<div id="box">
+		<ul id="list1">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<div id="list2">
+			
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var list1 = document.getElementById('list1');
+	var btn1 = list1.getElementsByTagName('li');
+	var list2 = document.getElementById('list2');
+	var str2 = '';
+	var str3 = '';
+	var arr = [
+				['暖色调',['暖色调一','暖色调二','暖色调三','暖色调四',['images/img1.gif','images/img2.gif','images/img3.gif','images/img4.gif']]],
+				['金色夕阳',['金色夕阳一','金色夕阳二',['images/img5.gif','images/img6.gif']]],
+				['灰色格调',['灰色格调一','灰色格调二','灰色格调三','灰色格调四',['images/img7.gif','images/img8.gif','images/img9.gif','images/img10.gif']]],
+				['baby',['baby一','baby二',['images/img11.gif','images/img12.gif']]]
+			  ];
+	function chushi(){
+		//初始化
+		var i = 0;
+		for(var j=0;j<btn1.length;j++){
+			str2 += '<img src="'+arr[j][1][arr[j][1].length-1][0]+'" alt="" class="no"/>';
+			str3 += '<ul class="no">';
+			btn1[j].innerHTML = arr[j][0];
+			for(var i=0;i<arr[j][1].length-1;i++){
+				var str1 = '<li style="width:'+700/(arr[j][1].length-1)+'px;">'+arr[j][1][i]+'</li>';
+				str3 += str1;
+			}
+			str3 += '</ul>'
+		}
+		list2.innerHTML = str2+str3;
+		var uls = list2.getElementsByTagName('ul');
+		var frist = uls[0].getElementsByTagName('li')[0]; 
+		var oImg = list2.getElementsByTagName('img');
+		btn1[0].className = 'active';
+		frist.className = 'active';
+		uls[0].className = 'yes';
+		oImg[0].className = 'yes';
+		//
+		var m = 0;
+		var num = 1;
+		var timer = null;
+		function left(){
+			var lis = uls[m].getElementsByTagName('li');
+			for(var j=0;j<btn1.length;j++){
+				btn1[j].className = '';
+				uls[j].className = 'no';
+				oImg[j].className = 'no';
+			}
+			for(var i=0;i<lis.length;i++){
+				lis[i].className = '';
+			}
+			btn1[m].className = 'active';
+			uls[m].className = 'yes';
+			oImg[m].className = 'yes';
+			lis[num].className = 'active';
+			oImg[m].src = arr[m][1][arr[m][1].length-1][num];
+			num++;
+			if(num>lis.length-1){
+				num = 0;
+				m++;
+				if(m==btn1.length){
+					m=0;
+				}
+			}
+			
+			console.log(num)
+		}
+		timer = setInterval(function(){
+			left()
+		},1000)
+		
+		//左侧点击事件
+		function fn(n){
+			var lis = uls[n].getElementsByTagName('li');
+			for(var i=0;i<btn1.length;i++){
+					btn1[i].className = '';
+					uls[i].className = 'no';
+					oImg[i].className = 'no';
+				}
+			btn1[n].className = 'active';
+			uls[n].className = 'yes';
+			oImg[n].className = 'yes';
+			lis[0].className = 'active';
+			for(var i=0;i<lis.length;i++){
+				lis[i].index = i;
+				lis[i].onclick = function(){
+					for(var i=0;i<lis.length;i++){
+						lis[i].className = '';
+					}
+					this.className = 'active';
+					oImg[n].src = arr[n][1][arr[n][1].length-1][this.index];
+				}
+			}
+		}
+		for(var i=0;i<btn1.length;i++){
+			btn1[i].index = i;
+			btn1[i].onclick = function(){
+				fn(this.index);
+			}
+		}
+		var _lis = uls[0].getElementsByTagName('li');
+		for(var i=0;i<_lis.length;i++){
+				_lis[i].index = i;
+				_lis[i].onclick = function(){
+					for(var i=0;i<_lis.length;i++){
+						_lis[i].className = '';
+					}
+					this.className = 'active';
+					oImg[0].src = arr[0][1][arr[0][1].length-1][this.index];
+				}
+			}
+	}
+	chushi();
+</script>
